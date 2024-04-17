@@ -17,7 +17,6 @@ public class Application {
   
   // The views
   private MapView mapView;
-  private Spatial3DView spatialView;
   private ElevationPathView elevationPathView;
   private HistogramView histogramView;
   
@@ -35,12 +34,11 @@ public class Application {
    
     // Create the views
     mapView = new MapView(model,0,0, width/2-1,(int)(0.65*height));
-    spatialView = new Spatial3DView(model, width/2+1,0, width/2,(int)(0.65*height));
     elevationPathView = new ElevationPathView(model, 0,(int)(0.65*height)+2, (int)(width*0.65),(int)(0.35*height)-2);
     histogramView = new HistogramView(model, (int)(width*0.65+3),(int)(0.65*height)+2, (int)(width*0.35-3),(int)(0.35*height)-2);
     
     // Create the controller that updates the model and queries the views
-    controller = new Controller(model, mapView, spatialView, elevationPathView, histogramView);
+    controller = new Controller(model, mapView, elevationPathView, histogramView);
   }
   
   // This method is part of the update loop.
@@ -53,7 +51,6 @@ public class Application {
     background(100, 100, 100);
     ellipseMode(RADIUS);
     mapView.draw();
-    spatialView.draw();
     elevationPathView.draw();
     histogramView.draw();
   }
