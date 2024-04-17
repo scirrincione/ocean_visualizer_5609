@@ -39,29 +39,6 @@ public class MapView extends View {
     image(img, 0, 0);
     popMatrix();
     
-    // Show the cross hairs for querying the image
-    stroke(200,0,0);
-    line(mouseX,0, mouseX,h);
-    line(0,mouseY, w,mouseY);
-    fill(255,255,255);
-    textSize(20);
-    int imgX = screenXtoImageX(mouseX);
-    int imgY = screenYtoImageY(mouseY);
-    if (imgX >= 0 && imgX < img.width && imgY >= 0 && imgY < img.height) {
-      text("" + imgX + ", " + imgY , mouseX+50, mouseY+50);
-    }
-    fill(0,0,0);
-    stroke(0,0,0);
-    
-    ArrayList<Point> path = model.getMap().getPath();
-    for(int i = 0; i < path.size(); i++) {
-      fill(191,45,0);
-      circle(path.get(i).getX(), path.get(i).getY(), 5);
-      if(path.size() > 1 && i > 0){
-        line(path.get(i-1).getX(), path.get(i-1).getY(), path.get(i).getX(), path.get(i).getY());
-      }
-      
-    }
    
       
   }

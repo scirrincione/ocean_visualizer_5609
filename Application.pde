@@ -16,9 +16,9 @@ public class Application {
   private MapModel model;
   
   // The views
-  private MapView mapView;
-  private ElevationPathView elevationPathView;
-  private HistogramView histogramView;
+  private MapView mapView; // need to change to go across screen instead of just top left
+  private ElevationPathView elevationPathView; // need to change to year graph in proposal
+  private HistogramView histogramView; // need to change to comparison graph in proposal
   
   // The Controller
   private Controller controller;
