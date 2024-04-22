@@ -2,11 +2,25 @@
 Application application = null;
 int time = 0;
 
+int starYear = 1970;
+int endYear = 2020;
+
+//Import data 
+Table OSD = loadTable("data/OSDmaster.csv", "header");
+
+
 // Create the application and intialize the time
 void setup() {
   size(1600,800,P3D);
   application = new Application();
   time = millis();
+  
+  //starts at row 22 it seems 
+  for (int i = 22; i < OSD.getRowCount(); i++) {
+    
+  
+  }
+
 }
 
 // Render the graphics application
