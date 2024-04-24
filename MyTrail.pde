@@ -6,11 +6,12 @@ int starYear = 1970;
 int endYear = 2020;
 
 //Import data 
-Table OSD = loadTable("data/OSDmaster.csv", "header");
+Table OSD;
 
 
 // Create the application and intialize the time
 void setup() {
+  OSD = loadTable("data/OSDmaster.csv", "header");
   size(1600,800,P3D);
   application = new Application();
   time = millis();
