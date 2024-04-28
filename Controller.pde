@@ -41,7 +41,9 @@ public class Controller {
   }
   
   public void mouseWheel(MouseEvent event) {
-    
+    if (mapView.isInside(mouseX, mouseY)) {
+      mapView.panZoomPage.mouseWheel(event);
+    }
     
   }
 }
