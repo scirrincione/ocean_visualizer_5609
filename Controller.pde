@@ -24,7 +24,9 @@ public class Controller {
   }
   
   public void mousePressed() {
-   
+    if(mapView.isInside(mouseX, mouseY)){
+      mapView.mousePressed();
+    }
   }
   
   public void mouseReleased() {
