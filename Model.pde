@@ -8,16 +8,29 @@
 // Model class for holding information
 public class MapModel {
   private ElevationMap map;
+  // table for the data and table for which data has been selected
+  private Table dataTable;
+  private Table columns;
   
   // Pass in a filepath to an image.  It will use the red channel for determining the elevation.
-  public MapModel(String filePath) {
+  public MapModel(String filePath, Table data, Table col) {
     PImage heightMap = loadImage(filePath);
     map = new ElevationMap(heightMap, 0.0, 1.0);
+    dataTable = data;
+    columns = col;
   }
   
   // Get's the elevation map
   public ElevationMap getMap() {
     return map;
+  }
+  
+  public Table getData(){
+    return dataTable;
+  }
+  
+  public Table getCurrColumns(){
+    return columns;
   }
 };
 
