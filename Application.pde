@@ -48,6 +48,7 @@ public class Application {
     currColumns = new Table();
     currColumns.addColumn("var");
     currColumns.addColumn("included");
+    currColumns.addColumn("color");
     
     // start dummy data creation
     DummyData = new Table();
@@ -61,12 +62,12 @@ public class Application {
     for(int i = 0; i < 50; i++){
       DummyData.addRow();
       DummyData.setInt(i,"year", 1950+i);
-      DummyData.setInt(i,"lat", i);
-      DummyData.setInt(i,"long", i);
-      DummyData.setInt(i,"plankton", i);
-      DummyData.setInt(i,"oxygen", i);
-      DummyData.setInt(i,"ph", i);
-      DummyData.setInt(i,"temp", i);
+      DummyData.setFloat(i,"lat", 36);
+      DummyData.setFloat(i,"long", -96);
+      DummyData.setFloat(i,"plankton", i);
+      DummyData.setFloat(i,"oxygen", i);
+      DummyData.setFloat(i,"ph", i);
+      DummyData.setFloat(i,"temp", i);
     }
     //end dummy data creation (this can all be safely deleted later
    
@@ -74,9 +75,10 @@ public class Application {
       TableRow newRow = currColumns.addRow();
       newRow.setString("var", DummyData.getColumnTitle(i));
       newRow.setInt("included", 0);
+      newRow.setInt("color", i*20);
     }
     // Create the model and set the height map we are interested in working with
-    model = new MapModel("ocean_data.png", DummyData, currColumns);
+    model = new MapModel("earth-2k.png", DummyData, currColumns);
     
     // Create the views
     mapView = new MapView(model,0,0, width-1,(int)(0.65*height));

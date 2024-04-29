@@ -7,6 +7,8 @@ public class MapView extends View {
   private float zoom = 1.0;
   public float translateX = 0.0;
   public float translateY = 0.0;
+  // year variable needs to start at the first year of data
+  public int currYear = 1950;
   int boxSize = 20; // sets size of check box
   Table checkBoxes; // table of where the check boxes are (x, y, included, var)
   private PanZoomPage panZoomPage;
@@ -20,9 +22,8 @@ public class MapView extends View {
     img = model.getMap().getColorImage();
     panZoomPage = new PanZoomPage(x, y, w, h);
     panZoomPage.fitPageOnScreen();
-    
     if (img.width > img.height) {
-      imgScale = 1.5/img.width;
+      imgScale = 2.0/img.width;
     } else {
       imgScale = 1.0/img.height;
     }
@@ -64,7 +65,7 @@ public class MapView extends View {
     int numBoxes = checkBoxes.getRowCount();
     int checkWidth = 190;
     int checkHeight = (int)(numBoxes*boxSize*2);
-    fill(255);
+    fill(255, 150);
     rect(width-checkWidth-10, 10, checkWidth, checkHeight);
     for(int i = 0; i < numBoxes; i++){
       if (col.getInt(i, "included") == 0){
@@ -78,6 +79,27 @@ public class MapView extends View {
       textSize(boxSize);
       text(checkBoxes.getString(i, "var"), checkBoxes.getInt(i, "x")+boxSize*1.5, checkBoxes.getInt(i, "y")+15);
     }
+    
+    // draw points based on latitude and longitude
+    // IMPORTANT!!!! CHANGES WILL NEED TO BE MADE IN HERE IF DATA SET UP IS CHANGED
+    Table data = model.getData();
+    for(int i = 0; i < data.getRowCount(); i++){
+      TableRow currRow = data.getRow(i);
+      if(currRow.getInt("year") == currYear){
+        // for loop starts at 3 because first 3 columns are year, latitude, longitude
+        for(int j = 3; j < data.getColumnCount(); j++){
+          float[] currPos = convertLatLongToMap(currRow.getFloat("long"), currRow.getFloat("lat"));
+          fill(255);
+          circle(panZoomPage.pageXtoScreenX(currPos[0]), panZoomPage.pageYtoScreenY(currPos[1]), 20);
+        }
+      }
+    }
+  }
+  
+  public float[] convertLatLongToMap(float lon, float lat){
+    float x = (float)((lon+180.0)/360.0*img.width);
+    float y = (float)(img.height-((lat+90.0)/180.0*img.height));
+    return new float[]{panZoomPage.screenXtoPageX(x),panZoomPage.screenYtoPageY(y)};
   }
   
   public void mousePressed(){
