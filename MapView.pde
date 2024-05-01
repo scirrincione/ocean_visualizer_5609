@@ -8,13 +8,14 @@ public class MapView extends View {
   public float translateX = 0.0;
   public float translateY = 0.0;
   // year variable needs to start at the first year of data
-  public int currYear = 1950;
+  public int currYear;
   int boxSize = 20; // sets size of check box
   Table checkBoxes; // table of where the check boxes are (x, y, included, var)
   private PanZoomMap panZoomMap;
   PImage img;
   float imgScale;
   float aspect;
+  int startCol;
   
   public MapView(MapModel model, int x, int y, int w, int h) {
     super(x, y, w, h);
@@ -28,7 +29,10 @@ public class MapView extends View {
       imgScale = 1.0/img.height;
     }
     
+    currYear = model.getCurrYear();
+    
     // set check box info here to make clicking easier
+    startCol = 4; //column to start from so year isn't included in checkboxes
     checkBoxes = new Table();
     checkBoxes.addColumn("x", Table.INT);
     checkBoxes.addColumn("y", Table.INT);
@@ -36,11 +40,11 @@ public class MapView extends View {
     checkBoxes.addColumn("var", Table.STRING);
     Table data = model.getData();
     int checkWidth = 190;
-    int checkHeight = (int)(data.getColumnCount()*boxSize*2);
-    int numBoxes = data.getColumnCount();
-    for(int i = 0; i < numBoxes; i++){
+    int checkHeight = (int)((data.getColumnCount()-startCol)*boxSize*2);
+    int numBoxes = data.getColumnCount()-startCol;
+    for(int i = startCol; i < data.getColumnCount(); i++){
       TableRow newRow = checkBoxes.addRow();
-      newRow.setInt("y", checkHeight/numBoxes*i+20);
+      newRow.setInt("y", checkHeight/numBoxes*(i-startCol)+20);
       newRow.setInt("x", width-checkWidth);
       newRow.setString("var", data.getColumnTitle(i));
     }
@@ -90,26 +94,35 @@ public class MapView extends View {
     }
     
     // draw points based on latitude and longitude
-    // IMPORTANT!!!! CHANGES WILL NEED TO BE MADE IN HERE IF DATA SET UP IS CHANGED
     Table data = model.getData();
+    currYear = model.getCurrYear();
     for(int i = 0; i < data.getRowCount(); i++){
       TableRow currRow = data.getRow(i);
       if(currRow.getInt("year") == currYear){
         // for loop starts at 3 because first 3 columns are year, latitude, longitude
-        for(int j = 3; j < data.getColumnCount(); j++){
-          //float[] currPos = convertLatLongToMap(currRow.getFloat("long"), currRow.getFloat("lat"));
-          fill(255);
-          circle(panZoomMap.longitudeToScreenX(currRow.getFloat("long")), panZoomMap.latitudeToScreenY(currRow.getFloat("lat")), 20);
+        for(int j = startCol; j < data.getColumnCount(); j++){
+          fill(col.getInt(j-startCol, "color"));
+          if(col.getInt(j-startCol,"included") == 1){
+            System.out.println(currRow.getFloat(j));
+            circle(panZoomMap.longitudeToScreenX(currRow.getFloat("longitude")), panZoomMap.latitudeToScreenY(currRow.getFloat("latitude")), log(currRow.getFloat(j)));
+          }
         }
       }
     }
+    
+    
+    // year changer
+    fill(255);
+    rect(width-150, height/2+50, 140, 60);
+    fill(0);
+    text("Year: " + model.getCurrYear(), width-125, height/2+68);
+    rect(width-140, height/2+75, 50, 30);
+    rect(width-70, height/2+75, 50, 30);
+    fill(255);
+    text(model.getCurrYear()-1, width-135, height/2+95);
+    text(model.getCurrYear()+1, width-65, height/2+95);
   }
   
-  public float[] convertLatLongToMap(float lon, float lat){
-    float x = (float)((lon+180.0)/360.0*img.width);
-    float y = (float)(img.height-((lat+90.0)/180.0*img.height));
-    return new float[]{panZoomMap.screenXtoPageX(x),panZoomMap.screenYtoPageY(y)};
-  }
   
   void mousePressed(){
     
@@ -119,6 +132,12 @@ public class MapView extends View {
         model.getCurrColumns().setInt(i, "included", (model.getCurrColumns().getInt(i, "included")+1)%2);
       }
         
+    }
+    if(mouseX >= width-140 && mouseX <= width-90 && mouseY >= height/2+75 && mouseY <= height/2+105 && model.getCurrYear() >= model.getCurrColumns().getRow(1).getInt("min")){
+      model.decCurrYear();
+    }
+    if(mouseX >= width-70 && mouseX <= width-20 && mouseY >= height/2+75 && mouseY <= height/2+105 && model.getCurrYear() <= model.getCurrColumns().getRow(1).getInt("max")){
+      model.incCurrYear();
     }
   }
 
