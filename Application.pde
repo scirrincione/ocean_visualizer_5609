@@ -71,9 +71,9 @@ public class Application {
       TableRow newRow = currColumns.addRow();
       newRow.setString("var", OSD.getColumnTitle(i));
       newRow.setInt("included", 0);
-      newRow.setInt("color", 180+i*20);
       newRow.setFloat("min", OSD.getFloat(i, OSD.getColumnTitle(i)));
       newRow.setFloat("max", OSD.getFloat(i, OSD.getColumnTitle(i)));
+      newRow.setInt("color", i);
     }
     
     for(int i = 0; i < OSD.getRowCount(); i++){
@@ -90,8 +90,10 @@ public class Application {
 
       }
     }
+    
+    color[] colors = {color(252,186,3), color(3,44,252), color(252,152,3), color(3,252,44)};
     // Create the model and set the height map we are interested in working with
-    model = new MapModel("earth-2k.png", OSD, currColumns);
+    model = new MapModel("earth-2k.png", OSD, currColumns, colors);
     
     // Create the views
     mapView = new MapView(model,0,0, width-1,(int)(0.65*height));

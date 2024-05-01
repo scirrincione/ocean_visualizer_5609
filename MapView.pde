@@ -85,7 +85,7 @@ public class MapView extends View {
         fill(255);
       }
       else {
-        fill(0);
+        fill(model.getColor(col.getInt(i, "color")));
       }
       square(checkBoxes.getInt(i,"x"), checkBoxes.getInt(i, "y"), boxSize);
       fill(0);
@@ -101,11 +101,12 @@ public class MapView extends View {
       if(currRow.getInt("year") == currYear){
         // for loop starts at 3 because first 3 columns are year, latitude, longitude
         for(int j = startCol; j < data.getColumnCount(); j++){
-          fill(col.getInt(j-startCol, "color"));
+          fill(model.getColor(col.getInt(j-startCol, "color")), 120);
+          noStroke();
           if(col.getInt(j-startCol,"included") == 1){
-            System.out.println(currRow.getFloat(j));
             circle(panZoomMap.longitudeToScreenX(currRow.getFloat("longitude")), panZoomMap.latitudeToScreenY(currRow.getFloat("latitude")), log(currRow.getFloat(j)));
           }
+          stroke(0);
         }
       }
     }
@@ -119,8 +120,8 @@ public class MapView extends View {
     rect(width-140, height/2+75, 50, 30);
     rect(width-70, height/2+75, 50, 30);
     fill(255);
-    text(model.getCurrYear()-1, width-135, height/2+95);
-    text(model.getCurrYear()+1, width-65, height/2+95);
+    text("prev", width-135, height/2+95);
+    text("next", width-65, height/2+95);
   }
   
   
