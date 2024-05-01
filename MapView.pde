@@ -11,7 +11,7 @@ public class MapView extends View {
   public int currYear = 1950;
   int boxSize = 20; // sets size of check box
   Table checkBoxes; // table of where the check boxes are (x, y, included, var)
-  private PanZoomPage panZoomPage;
+  private PanZoomMap panZoomMap;
   PImage img;
   float imgScale;
   float aspect;
@@ -20,8 +20,8 @@ public class MapView extends View {
     super(x, y, w, h);
     this.model = model;
     img = model.getMap().getColorImage();
-    panZoomPage = new PanZoomPage(x, y, w, h);
-    panZoomPage.fitPageOnScreen();
+    panZoomMap = new PanZoomMap(-90, -180, 90, 180);
+    panZoomMap.fitPageOnScreen();
     if (img.width > img.height) {
       imgScale = 2.0/img.width;
     } else {
@@ -49,7 +49,7 @@ public class MapView extends View {
   
   public void drawView() {
     // Center the map
-    float imageX = panZoomPage.pageXtoScreenX(0.5);
+    /*float imageX = panZoomPage.pageXtoScreenX(0.5);
     float imageY = panZoomPage.pageYtoScreenY(0.5);
     
     // Draw the map using the panZoomPage
@@ -58,7 +58,16 @@ public class MapView extends View {
     scale(1.0*panZoomPage.pageLengthToScreenLength(1.0)*imgScale);
     translate(-img.width/2,-img.height/2);
     image(img, 0, 0);
-    popMatrix();
+    popMatrix();*/
+    float x1 = panZoomMap.longitudeToScreenX(-180);
+    float y1 = panZoomMap.latitudeToScreenY(90);
+    float x2 = panZoomMap.longitudeToScreenX(180);
+    float y2 = panZoomMap.latitudeToScreenY(-90);
+    image(img, x1, y1, x2-x1, y2-y1);
+    
+    fill(255);
+    String s2 = "(" + panZoomMap.screenXtoLongitude(mouseX) + ", " + panZoomMap.screenYtoLatitude(mouseY) +  ")";
+    text(s2, mouseX, mouseY);
     
     // draws check box using precalculated checkbox variables 
     Table col = model.getCurrColumns();
@@ -88,9 +97,9 @@ public class MapView extends View {
       if(currRow.getInt("year") == currYear){
         // for loop starts at 3 because first 3 columns are year, latitude, longitude
         for(int j = 3; j < data.getColumnCount(); j++){
-          float[] currPos = convertLatLongToMap(currRow.getFloat("long"), currRow.getFloat("lat"));
+          //float[] currPos = convertLatLongToMap(currRow.getFloat("long"), currRow.getFloat("lat"));
           fill(255);
-          circle(panZoomPage.pageXtoScreenX(currPos[0]), panZoomPage.pageYtoScreenY(currPos[1]), 20);
+          circle(panZoomMap.longitudeToScreenX(currRow.getFloat("long")), panZoomMap.latitudeToScreenY(currRow.getFloat("lat")), 20);
         }
       }
     }
@@ -99,10 +108,10 @@ public class MapView extends View {
   public float[] convertLatLongToMap(float lon, float lat){
     float x = (float)((lon+180.0)/360.0*img.width);
     float y = (float)(img.height-((lat+90.0)/180.0*img.height));
-    return new float[]{panZoomPage.screenXtoPageX(x),panZoomPage.screenYtoPageY(y)};
+    return new float[]{panZoomMap.screenXtoPageX(x),panZoomMap.screenYtoPageY(y)};
   }
   
-  public void mousePressed(){
+  void mousePressed(){
     
     // this just checks if a checkbox was clicked on, if so it sets included to 1 if it was 0 or 0 if it was 1
     for(int i = 0; i < checkBoxes.getRowCount(); i++){
@@ -115,13 +124,13 @@ public class MapView extends View {
 
   // Use the screen position to get the x value of the image
   public int screenXtoImageX(int screenX) {
-    float x = panZoomPage.screenXtoPageX(screenX);
+    float x = panZoomMap.screenXtoPageX(screenX);
     return (int)((x-0.5 + img.width*imgScale/2)*img.width/(img.width*imgScale));
   }
   
   // Use the screen position to get the y value of the image
   public int screenYtoImageY(int screenY) {
-    float y = panZoomPage.screenYtoPageY(screenY);
+    float y = panZoomMap.screenYtoPageY(screenY);
     return (int)((y-0.5 + img.height*imgScale/2)*img.height/(img.height*imgScale));
   }
 };
