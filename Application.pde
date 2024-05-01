@@ -38,7 +38,12 @@ public class Application {
   public Application() {
 
     OSD = loadTable("data/parsed_OSDmaster_v2.csv", "header");
-
+    
+    //currColumns is a data table with information about the different variables.
+    //When a data variable is selected included is turned from 0 to 1 so that other
+    //elements of the code know that this variable should now be displayed
+    //color is supposed to be the index in the color list it's kind of funky since
+    //some of the variables don't have colors so subtract 4 for any of the variables
     currColumns = new Table();
     currColumns.addColumn("var");
     currColumns.addColumn("included");
@@ -46,27 +51,8 @@ public class Application {
     currColumns.addColumn("min");
     currColumns.addColumn("max");
     
-    /*// start dummy data creation
-    DummyData = new Table();
-    DummyData.addColumn("year");
-    DummyData.addColumn("lat");
-    DummyData.addColumn("long");
-    DummyData.addColumn("plankton");
-    DummyData.addColumn("oxygen");
-    DummyData.addColumn("ph");
-    DummyData.addColumn("temp");
-    for(int i = 0; i < 50; i++){
-      DummyData.addRow();
-      DummyData.setInt(i,"year", 1950+i);
-      DummyData.setFloat(i,"lat", 36);
-      DummyData.setFloat(i,"long", -96);
-      DummyData.setFloat(i,"plankton", i);
-      DummyData.setFloat(i,"oxygen", i);
-      DummyData.setFloat(i,"ph", i);
-      DummyData.setFloat(i,"temp", i);
-    }
-    //end dummy data creation (this can all be safely deleted later*/
-   
+    
+    
     for(int i = 0; i < OSD.getColumnCount(); i++){
       TableRow newRow = currColumns.addRow();
       newRow.setString("var", OSD.getColumnTitle(i));
@@ -76,6 +62,7 @@ public class Application {
       newRow.setInt("color", i);
     }
     
+    //get the maxes and mins for any graph displays
     for(int i = 0; i < OSD.getRowCount(); i++){
       for(int j = 0; j < OSD.getColumnCount(); j++){
         float currVal = OSD.getFloat(i, j);
@@ -91,6 +78,7 @@ public class Application {
       }
     }
     
+    //set up the color list
     color[] colors = {color(252,186,3), color(3,44,252), color(252,152,3), color(3,252,44)};
     // Create the model and set the height map we are interested in working with
     model = new MapModel("earth-2k.png", OSD, currColumns, colors);

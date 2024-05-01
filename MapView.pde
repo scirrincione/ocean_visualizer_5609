@@ -81,11 +81,11 @@ public class MapView extends View {
     fill(255, 150);
     rect(width-checkWidth-10, 10, checkWidth, checkHeight);
     for(int i = 0; i < numBoxes; i++){
-      if (col.getInt(i, "included") == 0){
+      if (col.getInt(i+startCol, "included") == 0){
         fill(255);
       }
       else {
-        fill(model.getColor(col.getInt(i, "color")));
+        fill(model.getColor(i));
       }
       square(checkBoxes.getInt(i,"x"), checkBoxes.getInt(i, "y"), boxSize);
       fill(0);
@@ -130,7 +130,7 @@ public class MapView extends View {
     // this just checks if a checkbox was clicked on, if so it sets included to 1 if it was 0 or 0 if it was 1
     for(int i = 0; i < checkBoxes.getRowCount(); i++){
       if(mouseX >= checkBoxes.getInt(i, "x") && mouseX <= checkBoxes.getInt(i, "x")+boxSize && mouseY >= checkBoxes.getInt(i, "y") && mouseY <= checkBoxes.getInt(i, "y")+boxSize){
-        model.getCurrColumns().setInt(i, "included", (model.getCurrColumns().getInt(i, "included")+1)%2);
+        model.getCurrColumns().setInt(i+startCol, "included", (model.getCurrColumns().getInt(i+startCol, "included")+1)%2);
       }
         
     }
