@@ -25,7 +25,7 @@ public class Controller {
   
   public void mousePressed() {
     if(mapView.isInside(mouseX, mouseY)){
-      mapView.panZoomPage.mousePressed();
+      mapView.panZoomMap.mousePressed();
       mapView.mousePressed();
     }
   }
@@ -35,7 +35,7 @@ public class Controller {
   
   public void mouseDragged() {   
     if (mapView.isInside(mouseX, mouseY) && (mouseButton == CENTER || mouseButton == RIGHT)) {
-      mapView.panZoomPage.mouseDragged();
+      mapView.panZoomMap.mouseDragged();
     }
   }
   
@@ -45,7 +45,7 @@ public class Controller {
   
   public void mouseWheel(MouseEvent event) {
     if (mapView.isInside(mouseX, mouseY)) {
-      mapView.panZoomPage.mouseWheel(event);
+      mapView.panZoomMap.mouseWheel(event);
     }
     
   }

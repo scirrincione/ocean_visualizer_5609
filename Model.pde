@@ -11,6 +11,7 @@ public class MapModel {
   // table for the data and table for which data has been selected
   private Table dataTable;
   private Table columns;
+  private int currYear;
   
   // Pass in a filepath to an image.  It will use the red channel for determining the elevation.
   public MapModel(String filePath, Table data, Table col) {
@@ -18,6 +19,19 @@ public class MapModel {
     map = new ElevationMap(heightMap, 0.0, 1.0);
     dataTable = data;
     columns = col;
+    currYear = col.getRow(1).getInt("min");
+  }
+  
+  public int getCurrYear(){
+    return currYear;
+  }
+  
+  public void incCurrYear(){
+    currYear++;
+  }
+  
+  public void decCurrYear(){
+    currYear--;
   }
   
   // Get's the elevation map

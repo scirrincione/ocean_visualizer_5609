@@ -37,20 +37,16 @@ public class Application {
   
   public Application() {
 
-    OSD = loadTable("data/OSDmaster.csv", "header");
-    
-    //starts at row 22 it seems 
-    for (int i = 22; i < OSD.getRowCount(); i++) {
-      
-    
-    }
+    OSD = loadTable("data/parsed_OSDmaster_v2.csv", "header");
 
     currColumns = new Table();
     currColumns.addColumn("var");
     currColumns.addColumn("included");
     currColumns.addColumn("color");
+    currColumns.addColumn("min");
+    currColumns.addColumn("max");
     
-    // start dummy data creation
+    /*// start dummy data creation
     DummyData = new Table();
     DummyData.addColumn("year");
     DummyData.addColumn("lat");
@@ -69,16 +65,33 @@ public class Application {
       DummyData.setFloat(i,"ph", i);
       DummyData.setFloat(i,"temp", i);
     }
-    //end dummy data creation (this can all be safely deleted later
+    //end dummy data creation (this can all be safely deleted later*/
    
-    for(int i = 0; i < DummyData.getColumnCount(); i++){
+    for(int i = 0; i < OSD.getColumnCount(); i++){
       TableRow newRow = currColumns.addRow();
-      newRow.setString("var", DummyData.getColumnTitle(i));
+      newRow.setString("var", OSD.getColumnTitle(i));
       newRow.setInt("included", 0);
-      newRow.setInt("color", i*20);
+      newRow.setInt("color", 180+i*20);
+      newRow.setFloat("min", OSD.getFloat(i, OSD.getColumnTitle(i)));
+      newRow.setFloat("max", OSD.getFloat(i, OSD.getColumnTitle(i)));
+    }
+    
+    for(int i = 0; i < OSD.getRowCount(); i++){
+      for(int j = 0; j < OSD.getColumnCount(); j++){
+        float currVal = OSD.getFloat(i, j);
+        float currMin = currColumns.getFloat(j, "min");
+        float currMax = currColumns.getFloat(j, "max");
+        if(currVal < currMin){
+          currColumns.setFloat(j, "min", currVal);
+        }
+        if(currVal > currMax){
+          currColumns.setFloat(j, "max", currVal);
+        }
+
+      }
     }
     // Create the model and set the height map we are interested in working with
-    model = new MapModel("earth-2k.png", DummyData, currColumns);
+    model = new MapModel("earth-2k.png", OSD, currColumns);
     
     // Create the views
     mapView = new MapView(model,0,0, width-1,(int)(0.65*height));

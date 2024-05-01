@@ -11,7 +11,7 @@ wide by 1 unit tall.  This means anything you wish to draw within the page shoul
 floating point coordinates in the range 0.0 to 1.0.  In many ways this makes drawing
 graphics a lot easier than Processing's default, which is 1 unit = 1 pixel.  To put
 an object in the middle of the virtual page, you simply place it at (0.5, 0.5) -- no
-need to check the pageWidth and pageHeight of the window and then divide by two as you would
+need to check the width and height of the window and then divide by two as you would
 with Processing's default coordinate system.  When the class is constructed, it
 automatically sets an appropriate scale so that the virtual page fills the processing
 window.  The class is quite lightweight.  It does not actually do any drawing for you.
@@ -42,7 +42,7 @@ void draw() {
   rect(panZoomPage.pageXtoScreenX(0), panZoomPage.pageYtoScreenY(0),
        panZoomPage.pageXtoScreenX(1), panZoomPage.pageYtoScreenY(1));
 
-  // draw a circle at the center of the page with a radius 0.25 times the pageWidth
+  // draw a circle at the center of the page with a radius 0.25 times the width
   // of the page
   float radius = panZoomPage.pageLengthToScreenLength(0.25);
   float cx = panZoomPage.pageXtoScreenX(0.5);
@@ -66,16 +66,12 @@ void mouseWheel(MouseEvent e) {
 */
 public class PanZoomPage { 
   
-  public PanZoomPage(int x, int y, int w, int h) {
+  public PanZoomPage() {
     scale = 1.0;
-    translateX = 0;
-    translateY = 0;
+    translateX = 0.0;
+    translateY = 0.0;
     lastMouseX = 0;
     lastMouseY = 0;
-    offsetX = x;
-    offsetY = y;
-    pageWidth = w;
-    pageHeight = h;
   
     fitPageOnScreen(); 
   }
@@ -107,34 +103,31 @@ public class PanZoomPage {
   }
   
   void fitPageOnScreen() {
-    if (pageWidth >= pageHeight) {
-      scale = pageHeight;
-      translateY = offsetY;
-      translateX = offsetX + (pageWidth - pageHeight) / 2.0;
+    if (width >= height) {
+      scale = height;
+      translateY = 0;
+      translateX = (width - height) / 2.0;
     }
     else {
-      scale = pageWidth;
-      translateX = offsetX;
-      translateY = offsetY + (pageHeight - pageWidth) / 2.0;
+      scale = width;
+      translateX = 0;
+      translateY = (height - width) / 2.0;
     }
   }
 
   void mousePressed() {
-    //if (mouseButton == LEFT) {
-      lastMouseX = mouseX;
-      lastMouseY = mouseY;
-    //}
+    lastMouseX = mouseX;
+    lastMouseY = mouseY; 
   }
   
   void mouseDragged() {
-    //if (mouseButton == LEFT) {
-      int deltaX = mouseX - lastMouseX;
-      int deltaY = mouseY - lastMouseY;
-      translateX += deltaX;
-      translateY += deltaY;
-      lastMouseX = mouseX;
-      lastMouseY = mouseY;
-    //}
+    int deltaX = mouseX - lastMouseX;
+    int deltaY = mouseY - lastMouseY;
+    translateX += deltaX;
+    translateY += deltaY;
+    lastMouseX = mouseX;
+    lastMouseY = mouseY;
+
   }
 
   void mouseWheel(MouseEvent e)
@@ -163,8 +156,4 @@ public class PanZoomPage {
   float translateY = 0.0;
   int lastMouseX = 0;
   int lastMouseY = 0;
-  int offsetX;
-  int offsetY;
-  int pageHeight;
-  int pageWidth;
 }
