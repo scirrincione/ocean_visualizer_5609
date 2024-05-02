@@ -35,7 +35,7 @@ public class Controller {
     if(mapView.isInside(mouseX, mouseY)){
       mapView.panZoomMap.mousePressed();
       mapView.mousePressed();
-      if((mouseButton == LEFT)) {
+      if((mouseButton == LEFT && mouseX < width-200)) {
         model.click(mouseX,mouseY);
       }
     }

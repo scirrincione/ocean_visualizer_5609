@@ -56,6 +56,23 @@ public class ElevationPathView extends View {
       }
     }*/
     
+    // get all of the points that would be on the graph
+    Table mData = model.getData();
+    Table cols = model.getCurrColumns();
+    plot.setPos(25,25);
+    for(int i = 0; i < cols.getColumnCount(); i++){
+      TableRow currCol = cols.getRow(i);
+      if(currCol.getInt("included") == 1){
+        GPointsArray points = new GPointsArray(mData.getRowCount());
+        for(int j = 0; j < mData.getRowCount(); j++){ 
+          TableRow currRow = mData.getRow(j);
+          points.add(j, currRow.getFloat(currCol.getString("var")));
+        }
+        plot.setPoints(points);
+        plot.defaultDraw();
+      }
+    }
+    
     
 
   }
