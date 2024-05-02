@@ -64,7 +64,7 @@ public class ElevationPathView extends View {
       TableRow currCol = cols.getRow(i);
       if(currCol.getInt("included") == 1){
         GPointsArray points = new GPointsArray(mData.getRowCount());
-        for(int j = 0; j < mData.getRowCount(); j++){
+        for(int j = 0; j < mData.getRowCount(); j++){ 
           TableRow currRow = mData.getRow(j);
           points.add(j, currRow.getFloat(currCol.getString("var")));
         }
