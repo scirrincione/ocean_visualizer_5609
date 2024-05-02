@@ -12,6 +12,7 @@ public class MapModel {
   private Table dataTable;
   private Table columns;
   private int currYear;
+  private color[] colors;
   
   private float pointRadius;
   private PVector toggledPoint;
@@ -20,7 +21,7 @@ public class MapModel {
   private PanZoomMap panZoomMap;
   
   // Pass in a filepath to an image.  It will use the red channel for determining the elevation.
-  public MapModel(String filePath, Table data, Table col) {
+  public MapModel(String filePath, Table data, Table col, color[] c) {
     PImage heightMap = loadImage(filePath);
     map = new ElevationMap(heightMap, 0.0, 1.0);
     dataTable = data;
@@ -28,6 +29,11 @@ public class MapModel {
     this.pointRadius = 5;
     this.regionPoints = new ArrayList<PVector>();
     currYear = col.getRow(1).getInt("min");
+    colors = c;
+  }
+  
+  public color getColor(int num){
+    return colors[num];
   }
   
   private void setZoomMap(PanZoomMap panZoomMap) { // This is disgusting remove it later prolly
@@ -39,11 +45,31 @@ public class MapModel {
   }
   
   public void incCurrYear(){
-    currYear++;
+    boolean found = false;
+    for(int i = 0; i < dataTable.getRowCount(); i++){
+      TableRow currRow = dataTable.getRow(i);
+      if(currRow.getInt("year") == currYear && !found){
+        found = true;
+      }
+      if(found && currRow.getInt("year") != currYear){
+        currYear = currRow.getInt("year");
+        return;
+      }
+    }
   }
   
   public void decCurrYear(){
-    currYear--;
+    boolean found = false;
+    for(int i = dataTable.getRowCount()-1; i >= 0; i--){
+      TableRow currRow = dataTable.getRow(i);
+      if(currRow.getInt("year") == currYear && !found){
+        found = true;
+      }
+      if(found && currRow.getInt("year") != currYear){
+        currYear = currRow.getInt("year");
+        return;
+      }
+    }
   }
   
   // Get's the elevation map

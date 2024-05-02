@@ -92,11 +92,11 @@ public class MapView extends View {
     fill(255, 150);
     rect(width-checkWidth-10, 10, checkWidth, checkHeight);
     for(int i = 0; i < numBoxes; i++){
-      if (col.getInt(i, "included") == 0){
+      if (col.getInt(i+startCol, "included") == 0){
         fill(255);
       }
       else {
-        fill(0);
+        fill(model.getColor(i));
       }
       square(checkBoxes.getInt(i,"x"), checkBoxes.getInt(i, "y"), boxSize);
       fill(0);
@@ -112,11 +112,12 @@ public class MapView extends View {
       if(currRow.getInt("year") == currYear){
         // for loop starts at 3 because first 3 columns are year, latitude, longitude
         for(int j = startCol; j < data.getColumnCount(); j++){
-          fill(col.getInt(j-startCol, "color"));
+          fill(model.getColor(col.getInt(j-startCol, "color")), 120);
+          noStroke();
           if(col.getInt(j-startCol,"included") == 1){
-            System.out.println(currRow.getFloat(j));
             circle(panZoomMap.longitudeToScreenX(currRow.getFloat("longitude")), panZoomMap.latitudeToScreenY(currRow.getFloat("latitude")), log(currRow.getFloat(j)));
           }
+          stroke(0);
         }
       }
     }
@@ -130,8 +131,8 @@ public class MapView extends View {
     rect(width-140, height/2+75, 50, 30);
     rect(width-70, height/2+75, 50, 30);
     fill(255);
-    text(model.getCurrYear()-1, width-135, height/2+95);
-    text(model.getCurrYear()+1, width-65, height/2+95);
+    text("prev", width-135, height/2+95);
+    text("next", width-65, height/2+95);
   }
   
   void drawRegionPoly() {
@@ -166,7 +167,7 @@ public class MapView extends View {
     // this just checks if a checkbox was clicked on, if so it sets included to 1 if it was 0 or 0 if it was 1
     for(int i = 0; i < checkBoxes.getRowCount(); i++){
       if(mouseX >= checkBoxes.getInt(i, "x") && mouseX <= checkBoxes.getInt(i, "x")+boxSize && mouseY >= checkBoxes.getInt(i, "y") && mouseY <= checkBoxes.getInt(i, "y")+boxSize){
-        model.getCurrColumns().setInt(i, "included", (model.getCurrColumns().getInt(i, "included")+1)%2);
+        model.getCurrColumns().setInt(i+startCol, "included", (model.getCurrColumns().getInt(i+startCol, "included")+1)%2);
       }
         
     }

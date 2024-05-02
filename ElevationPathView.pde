@@ -12,7 +12,52 @@ public class ElevationPathView extends View {
   
   public void drawView() {
     fill(255);
-    text("Year Comparison View", x + 50, y + 50);
+    text("Year Comparison Histogram View", x + 50, y + 50);
+    
+    /*
+    stroke(255);
+    line(50, height-30, 50, height-200);
+    line(50, height-30, 860, height-30);
+    
+    text("Var", 10, height-220);
+    text("Year", 865, height-10);
+    
+    //label years x axis
+    int minYear = model.getCurrColumns().getRow(1).getInt("min");
+    int maxYear = model.getCurrColumns().getRow(1).getInt("max");
+    int diff = maxYear - minYear;
+    for(int i = 0; i < diff; i+=10){
+      text(i+minYear, i*800/diff+40, height-10);
+    }
+    
+    //label data amount y axis
+    Table mData = model.getData();
+    Table col = model.getCurrColumns();
+    for(int i = 0; i < col.getRowCount(); i++){
+      TableRow currRow = col.getRow(i);
+      if(currRow.getInt("included") == 1){
+        fill(model.getColor(currRow.getInt("color")-4));
+        textSize(15);
+        text(currRow.getInt("min"), 10, height-40+((i-4)*12));
+        text(currRow.getInt("max"), 10+((i-4)*25), height-200);
+        textSize(20);
+      }
+    }*/
+    /*
+    //put down included data
+    for(int i = 0; i < mData.getRowCount(); i++){
+      TableRow currRowData = mData.getRow(i);
+      for(int j = 0; j < col.getRowCount(); i++){
+        TableRow currRowCol = col.getRow(j);
+        if(currRowCol.getInt("included") == 1){
+          fill(model.getColor(currRow.getInt("color")-4));
+          line
+        }
+      }
+    }*/
+    
+    
+
   }
   
   public void mousePressed() {
