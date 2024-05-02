@@ -212,6 +212,12 @@ class PanZoomMap extends PanZoomPage {
     return pageLengthToMapLength(pageLen); 
   }
   
+  PVector coordinateToScreenPoint(PVector point) {
+    float screenX = longitudeToScreenX(point.x);
+    float screenY = latitudeToScreenY(point.y);
+    return new PVector(screenX, screenY);
+  }
+  
   float mapScale;
   float mapTranslateX;
   float mapTranslateY;

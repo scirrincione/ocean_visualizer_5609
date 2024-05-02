@@ -13,13 +13,25 @@ public class MapModel {
   private Table columns;
   private int currYear;
   
+  private float pointRadius;
+  private PVector toggledPoint;
+  ArrayList<PVector> regionPoints;
+  
+  private PanZoomMap panZoomMap;
+  
   // Pass in a filepath to an image.  It will use the red channel for determining the elevation.
   public MapModel(String filePath, Table data, Table col) {
     PImage heightMap = loadImage(filePath);
     map = new ElevationMap(heightMap, 0.0, 1.0);
     dataTable = data;
     columns = col;
+    this.pointRadius = 5;
+    this.regionPoints = new ArrayList<PVector>();
     currYear = col.getRow(1).getInt("min");
+  }
+  
+  private void setZoomMap(PanZoomMap panZoomMap) { // This is disgusting remove it later prolly
+    this.panZoomMap = panZoomMap;
   }
   
   public int getCurrYear(){
@@ -46,9 +58,80 @@ public class MapModel {
   public Table getCurrColumns(){
     return columns;
   }
+  
+  public ArrayList<PVector> getRegionPoints() {
+    return regionPoints;
+  }
+  
+  public boolean pointToggled(PVector point) {
+    return point == toggledPoint;
+  }
+  
+    // Add or select waypoints
+  public void click(int click_x, int click_y) {
+    float x = panZoomMap.screenXtoLongitude(click_x);
+    float y = panZoomMap.screenYtoLatitude(click_y);
+    PVector clicked = clickedPoint(x,y);
+    if(clicked != null) {
+      this.toggledPoint = clicked;
+    } else {
+      PVector newPoint = new PVector(x, y);
+      this.regionPoints.add(newPoint);
+      this.toggledPoint = newPoint;
+    }
+  }
+  
+  public void drag(int x, int y) {
+    if(toggledPoint == null) {
+      return;
+    }
+    toggledPoint.x = panZoomMap.screenXtoLongitude(x);
+    toggledPoint.y = panZoomMap.screenYtoLatitude(y);
+  }
+  
+  public void deletePoint() {
+    if(toggledPoint != null) {
+      regionPoints.remove(toggledPoint);
+      toggledPoint = null;
+    }
+  }
+  
+  public PVector clickedPoint(float x, float y) {
+    for (PVector point : this.regionPoints) {
+      float distance = dist(x, y, point.x, point.y);
+      if (distance <= this.pointRadius) {
+        return point;
+      }
+    }
+    return null;
+  }
+  
+  boolean coordinatesInRegion(float longitude, float latitude) {
+    int n = this.regionPoints.size();
+    if(n <= 2) {
+      return false;
+    }
+    boolean inside = false;
+    PVector p1 = this.regionPoints.get(0);
+    for (int i = 0; i <= n; i++) {
+      PVector p2 = this.regionPoints.get(i % n);
+      if (latitude > min(p1.y, p2.y)) {
+        if (latitude <= max(p1.y, p2.y)) {
+          if (longitude <= max(p1.x, p2.x)) {
+            if (p1.y != p2.y) {
+              float xints = (latitude - p1.y) * (p2.x - p1.x) / (p2.y - p1.y) + p1.x;
+              if (longitude <= xints) {
+                inside = !inside;
+              }
+            }
+          }
+        }
+      }
+      p1 = p2;
+    }
+    return inside;
+  }
 };
-
-
 
 // Defines an elevation map for working with terrain
 public class ElevationMap {

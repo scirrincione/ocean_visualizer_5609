@@ -32,6 +32,10 @@ void draw() {
 // Events are handled by the application's controller code:
 // ---------------------------------------------------------
 
+void keyPressed() {
+  application.getController().keyPressed();
+}
+
 // Call the controller's event method
 void mousePressed() {
   application.getController().mousePressed();
