@@ -95,6 +95,7 @@ public class MapModel {
   
     // Add or select waypoints
   public void click(int click_x, int click_y) {
+    if (click_x < width-250) {
     float x = panZoomMap.screenXtoLongitude(click_x);
     float y = panZoomMap.screenYtoLatitude(click_y);
     PVector clicked = clickedPoint(x,y);
@@ -104,6 +105,7 @@ public class MapModel {
       PVector newPoint = new PVector(x, y);
       this.regionPoints.add(newPoint);
       this.toggledPoint = newPoint;
+    }
     }
   }
   
