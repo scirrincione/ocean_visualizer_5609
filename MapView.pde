@@ -114,7 +114,6 @@ public class MapView extends View {
         for(int j = startCol; j < data.getColumnCount(); j++){
           fill(model.getColor(col.getInt(j-startCol, "color")), 120);
           noStroke();
-          System.out.println(col.getInt(j, "var"));
           if(col.getInt(j,"included") == 1){
             circle(panZoomMap.longitudeToScreenX(currRow.getFloat("longitude")), panZoomMap.latitudeToScreenY(currRow.getFloat("latitude")), log(currRow.getFloat(j)));
           }
