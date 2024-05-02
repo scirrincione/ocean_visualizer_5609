@@ -23,10 +23,21 @@ public class Controller {
   public void update(float dt) {
   }
   
+  public void keyPressed() {
+    if (key == 'd' || key == 'D') {
+      model.deletePoint();
+    } else if (key == 'r' || key == 'R') {
+      mapView.toggleRegionPoints();
+    }
+  }
+  
   public void mousePressed() {
     if(mapView.isInside(mouseX, mouseY)){
       mapView.panZoomMap.mousePressed();
       mapView.mousePressed();
+      if((mouseButton == LEFT)) {
+        model.click(mouseX,mouseY);
+      }
     }
   }
   
@@ -36,6 +47,8 @@ public class Controller {
   public void mouseDragged() {   
     if (mapView.isInside(mouseX, mouseY) && (mouseButton == CENTER || mouseButton == RIGHT)) {
       mapView.panZoomMap.mouseDragged();
+    } else if (mapView.isInside(mouseX,mouseY) && (mouseButton == LEFT)) {
+      model.drag(mouseX,mouseY);
     }
   }
   

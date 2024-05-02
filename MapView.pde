@@ -16,6 +16,8 @@ public class MapView extends View {
   float imgScale;
   float aspect;
   int startCol;
+  int regionPointRadius;
+  boolean hideRegionPoints;
   
   public MapView(MapModel model, int x, int y, int w, int h) {
     super(x, y, w, h);
@@ -28,8 +30,11 @@ public class MapView extends View {
     } else {
       imgScale = 1.0/img.height;
     }
+    this.regionPointRadius = 5;
+    model.setZoomMap(panZoomMap);
     
     currYear = model.getCurrYear();
+    this.hideRegionPoints = false;
     
     // set check box info here to make clicking easier
     startCol = 4; //column to start from so year isn't included in checkboxes
@@ -50,6 +55,10 @@ public class MapView extends View {
     }
   }
   
+  public void toggleRegionPoints() {
+    hideRegionPoints = !hideRegionPoints;
+  }
+  
   
   public void drawView() {
     // Center the map
@@ -68,6 +77,8 @@ public class MapView extends View {
     float x2 = panZoomMap.longitudeToScreenX(180);
     float y2 = panZoomMap.latitudeToScreenY(-90);
     image(img, x1, y1, x2-x1, y2-y1);
+    
+    drawRegionPoly();
     
     fill(255);
     String s2 = "(" + panZoomMap.screenXtoLongitude(mouseX) + ", " + panZoomMap.screenYtoLatitude(mouseY) +  ")";
@@ -122,6 +133,32 @@ public class MapView extends View {
     fill(255);
     text("prev", width-135, height/2+95);
     text("next", width-65, height/2+95);
+  }
+  
+  void drawRegionPoly() {
+      ArrayList<PVector> regionPoints = model.getRegionPoints(); 
+      if(!hideRegionPoints) {
+        for(PVector point : regionPoints) { // draw points
+          if(model.pointToggled(point)) { 
+            fill(0, 0, 255);
+          } else {
+            fill(255, 0, 255);
+          }
+          PVector sPoint = panZoomMap.coordinateToScreenPoint(point);
+          ellipse(sPoint.x, sPoint.y, this.regionPointRadius * 2, this.regionPointRadius * 2);
+        }
+      }
+      
+      stroke(0);
+      fill(150, 100); // Draw fill region
+      beginShape();
+      for (int i = 0; i < regionPoints.size(); i++) {
+        PVector sPoint = panZoomMap.coordinateToScreenPoint(regionPoints.get(i));
+        vertex(sPoint.x, sPoint.y);
+      }
+      endShape(CLOSE);
+      
+      println(model.coordinatesInRegion(0,0));
   }
   
   
