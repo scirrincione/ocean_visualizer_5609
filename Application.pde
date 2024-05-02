@@ -77,7 +77,7 @@ public class Application {
     }
     
     //set up the color list
-    color[] colors = {color(252,186,3), color(3,44,252), color(252,152,3), color(3,252,44)};
+    color[] colors = {color(224,114,4), color(3,44,252), color(255,245,99), color(3,252,44)};
     // Create the model and set the height map we are interested in working with
     model = new MapModel("earth-2k.png", OSD, currColumns, colors);
     
