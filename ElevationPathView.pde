@@ -59,7 +59,7 @@ public class ElevationPathView extends View {
     // get all of the points that would be on the graph
     Table mData = model.getData();
     Table cols = model.getCurrColumns();
-    plot.setPos(25,25);
+    plot.setPos(50,50);
     for(int i = 0; i < cols.getColumnCount(); i++){
       TableRow currCol = cols.getRow(i);
       if(currCol.getInt("included") == 1){
