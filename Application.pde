@@ -21,7 +21,6 @@ public class Application {
   private HistogramView histogramView; // need to change to comparison graph in proposal
   int starYear = 1970;
   int endYear = 2020;
-
   //Import data 
   Table OSD;
 
@@ -36,7 +35,6 @@ public class Application {
   private Controller controller;
   
   public Application() {
-
     OSD = loadTable("data/parsed_OSDmaster_v2.csv", "header");
     
     //currColumns is a data table with information about the different variables.
