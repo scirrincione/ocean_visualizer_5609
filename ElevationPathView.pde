@@ -13,6 +13,8 @@ public class ElevationPathView extends View {
   public void drawView() {
     fill(255);
     text("Year Comparison Histogram View", x + 50, y + 50);
+    
+    /*
     stroke(255);
     line(50, height-30, 50, height-200);
     line(50, height-30, 860, height-30);
@@ -40,7 +42,7 @@ public class ElevationPathView extends View {
         text(currRow.getInt("max"), 10+((i-4)*25), height-200);
         textSize(20);
       }
-    }
+    }*/
     /*
     //put down included data
     for(int i = 0; i < mData.getRowCount(); i++){
