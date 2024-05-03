@@ -48,7 +48,7 @@ public class HistogramView extends View {
       }
         for(int j = 0; j < mData.getRowCount(); j++){ //go through the data table for coordinates in the region
           TableRow currRow = mData.getRow(j); // get the current row of data to look at
-          if(model.coordinatesInRegion(currRow.getFloat("longitude"), currRow.getFloat("latitude"))){ // if within selected region
+          if(model.coordinatesInRegion(currRow.getFloat("longitude"), currRow.getFloat("latitude")) && model.getCurrYear() == currRow.getInt("year")){ // if within selected region
             for(int r = 0; r < buckets.length; r++){ // go through temperature buckets
               //System.out.println(r + " " +vals[r] + " " + (buckets[r]-(tempMax-tempMin)/numInd) + " " + (buckets[r]+(tempMax-tempMin)/numInd));
               if(currRow.getInt("temperature") > buckets[r]-(tempMax-tempMin)/numInd && currRow.getInt("temperature") < buckets[r]+(tempMax-tempMin)/numInd){ // if within bucket
