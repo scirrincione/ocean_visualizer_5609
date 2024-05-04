@@ -28,6 +28,8 @@ public class Controller {
       model.deletePoint();
     } else if (key == 'r' || key == 'R') {
       mapView.toggleRegionPoints();
+    } else if (key == 's' || key == 'S') {
+      mapView.toggleAllYears();
     }
   }
   

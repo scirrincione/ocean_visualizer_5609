@@ -18,6 +18,7 @@ public class MapView extends View {
   int startCol;
   int regionPointRadius;
   boolean hideRegionPoints;
+  boolean showAllYears;
   
   public MapView(MapModel model, int x, int y, int w, int h) {
     super(x, y, w, h);
@@ -53,10 +54,15 @@ public class MapView extends View {
       newRow.setInt("x", width-checkWidth);
       newRow.setString("var", data.getColumnTitle(i));
     }
+    showAllYears = false;
   }
   
   public void toggleRegionPoints() {
     hideRegionPoints = !hideRegionPoints;
+  }
+  
+  public void toggleAllYears() {
+    showAllYears = !showAllYears;
   }
   
   
@@ -77,6 +83,7 @@ public class MapView extends View {
     float x2 = panZoomMap.longitudeToScreenX(180);
     float y2 = panZoomMap.latitudeToScreenY(-90);
     image(img, x1, y1, x2-x1, y2-y1);
+   
     
     drawRegionPoly();
     
@@ -104,12 +111,13 @@ public class MapView extends View {
       text(checkBoxes.getString(i, "var"), checkBoxes.getInt(i, "x")+boxSize*1.5, checkBoxes.getInt(i, "y")+15);
     }
     
+    
     // draw points based on latitude and longitude
     Table data = model.getData();
     currYear = model.getCurrYear();
     for(int i = 0; i < data.getRowCount(); i++){
       TableRow currRow = data.getRow(i);
-      if(currRow.getInt("year") == currYear){
+      if(currRow.getInt("year") == currYear || showAllYears){
         // for loop starts at 3 because first 3 columns are year, latitude, longitude
         for(int j = startCol; j < data.getColumnCount(); j++){
           fill(model.getColor(col.getInt(j-startCol, "color")), 120);
@@ -133,6 +141,12 @@ public class MapView extends View {
     fill(255);
     text("prev", width-135, height/2+95);
     text("next", width-65, height/2+95);
+    
+  if(showAllYears) {
+      text("Showing all years", x + 25, y + 25);
+    } else {
+      text("Showing " + currYear, x + 25, y + 25);
+    }
   }
   
   void drawRegionPoly() {

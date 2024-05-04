@@ -171,7 +171,7 @@ public class ElevationPathView extends View {
       text(str(year), 0, 0); // Draws text at 90 deg rotation
       popMatrix();
       
-      ArrayList<Float> mappedNormalizedAvgs = normalizeAndMapAvgs(year); //<>//
+      ArrayList<Float> mappedNormalizedAvgs = normalizeAndMapAvgs(year); //<>// //<>//
       noStroke();
       if(currCols.getInt(4,"included") == 1) {
         int fillColor = color(224,114,4);
@@ -222,6 +222,7 @@ public class ElevationPathView extends View {
       i++;
       prevX = xLoc;
     }
+    noStroke();
   }
   
   private ArrayList<Float> normalizeAndMapAvgs(Integer year) {
