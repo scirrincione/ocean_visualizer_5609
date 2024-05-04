@@ -1,17 +1,17 @@
-import grafica.*;
+//import grafica.*;
 
 // Create an application
 Application application = null;
 int time = 0;
 
-GPlot plot;
+//GPlot plot;
 
 // Create the application and intialize the time
 void setup() {
   size(1400,800,P3D);
   application = new Application();
   time = millis();
-  plot = new GPlot(this);
+  //plot = new GPlot(this);
 }
 
 // Render the graphics application

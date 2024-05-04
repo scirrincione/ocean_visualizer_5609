@@ -37,6 +37,7 @@ public class Controller {
       mapView.mousePressed();
       if((mouseButton == LEFT && mouseX < width-200)) {
         model.click(mouseX,mouseY);
+        elevationPathView.setYearAvgs(); // Recalculate when region changes
       }
     }
   }
@@ -49,6 +50,7 @@ public class Controller {
       mapView.panZoomMap.mouseDragged();
     } else if (mapView.isInside(mouseX,mouseY) && (mouseButton == LEFT)) {
       model.drag(mouseX,mouseY);
+      elevationPathView.setYearAvgs(); // Recalculate when region changes
     }
   }
   
